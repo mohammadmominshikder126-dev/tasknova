@@ -1,0 +1,123 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "User account information and balance",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "balance": { "type": "number" },
+        "totalEarned": { "type": "number" },
+        "totalWithdrawn": { "type": "number" },
+        "referralCode": { "type": "string" },
+        "invitedBy": { "type": "string" },
+        "activePackageId": { "type": "string" },
+        "packageExpiry": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "balance"]
+    },
+    "Package": {
+      "title": "Investment Package",
+      "description": "Available investment plans",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "price": { "type": "number" },
+        "durationDays": { "type": "number" },
+        "dailyTasks": { "type": "number" },
+        "dailyEarning": { "type": "number" },
+        "totalEarning": { "type": "number" },
+        "tier": { "type": "string" }
+      },
+      "required": ["id", "name", "price"]
+    },
+    "Transaction": {
+      "title": "Transaction Log",
+      "description": "Log of all balance changes",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "amount": { "type": "number" },
+        "type": { "type": "string", "enum": ["earning", "withdrawal", "recharge", "referral"] },
+        "status": { "type": "string", "enum": ["pending", "completed", "rejected"] },
+        "description": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "amount", "type", "status"]
+    },
+    "TaskLog": {
+      "title": "Task Completion Log",
+      "description": "Daily task completion tracking",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "packageId": { "type": "string" },
+        "date": { "type": "string" },
+        "count": { "type": "number" }
+      },
+      "required": ["userId", "packageId", "date", "count"]
+    },
+    "Banner": {
+      "title": "Home Banner",
+      "description": "Promotional banners for the home screen",
+      "type": "object",
+      "properties": {
+        "imageUrl": { "type": "string" },
+        "link": { "type": "string" },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["imageUrl", "active"]
+    },
+    "AdminSettings": {
+      "title": "Admin Settings",
+      "description": "Global settings managed by admin",
+      "type": "object",
+      "properties": {
+        "bkash": { "type": "string" },
+        "nagad": { "type": "string" },
+        "rocket": { "type": "string" },
+        "minWithdraw": { "type": "number" }
+      }
+    }
+  },
+  "firestore": {
+    "/settings/admin": {
+      "schema": "AdminSettings",
+      "description": "Admin global settings"
+    },
+    "/stats/users": {
+      "schema": "object",
+      "description": "Global user count"
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Individual user profiles"
+    },
+    "/packages/{packageId}": {
+      "schema": "Package",
+      "description": "Master list of investment packages"
+    },
+    "/transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "Log of user money movements"
+    },
+    "/taskLogs/{logId}": {
+      "schema": "TaskLog",
+      "description": "Daily counts of completed tasks per user"
+    },
+    "/banners/{bannerId}": {
+      "schema": "Banner",
+      "description": "App banners"
+    },
+    "/admins/{adminUid}": {
+      "schema": "object",
+      "description": "List of admin UIDs"
+    }
+  }
+}
